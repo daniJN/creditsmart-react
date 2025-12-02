@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { creditsData } from '../data/creditsData';
 import CreditCard from '../components/CreditCard';
@@ -9,15 +8,12 @@ function Simulator() {
   const [amountRange, setAmountRange] = useState('all');
   const [sortByRate, setSortByRate] = useState(false);
 
-  // Filtrar créditos
   const filteredCredits = creditsData
     .filter((credit) => {
-      // Filtro por nombre
       const matchesSearch = credit.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
 
-      // Filtro por rango de monto
       let matchesAmount = true;
       if (amountRange === 'low') {
         matchesAmount = credit.maxAmount <= 30000;
@@ -30,7 +26,6 @@ function Simulator() {
       return matchesSearch && matchesAmount;
     })
     .sort((a, b) => {
-      // Ordenar por tasa de interés si está activado
       if (sortByRate) {
         return a.interestRate - b.interestRate;
       }
@@ -42,7 +37,6 @@ function Simulator() {
       <h1 className="page-title">Simulador de Créditos</h1>
 
       <div className="filters-container">
-        {/* Búsqueda por nombre */}
         <div className="filter-group">
           <label htmlFor="search">Buscar por nombre:</label>
           <input
@@ -55,7 +49,6 @@ function Simulator() {
           />
         </div>
 
-        {/* Filtro por rango de monto */}
         <div className="filter-group">
           <label htmlFor="amount">Rango de monto:</label>
           <select
@@ -71,7 +64,6 @@ function Simulator() {
           </select>
         </div>
 
-        {/* Ordenar por tasa */}
         <div className="filter-group">
           <label className="checkbox-label">
             <input
@@ -84,7 +76,6 @@ function Simulator() {
         </div>
       </div>
 
-      {/* Resultados */}
       <div className="results-container">
         <p className="results-count">
           {filteredCredits.length} crédito(s) encontrado(s)

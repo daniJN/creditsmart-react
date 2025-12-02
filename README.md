@@ -133,13 +133,13 @@ creditsmart/
 ##  Capturas de Pantalla
 
 ### Página de Inicio
-![Inicio](./screenshots/home.png)
+![Inicio](./imagenes/formulario_0.jpg)
 
 ### Simulador con Filtros
-![Simulador](./screenshots/simulator.png)
+![Simulador](./imagenes/imagen_inicio.jpg)
 
 ### Formulario de Solicitud
-![Formulario](./screenshots/application.png)
+![Formulario](./imagenes/imagen_simulador_0.jpg)
 
 ---
 
