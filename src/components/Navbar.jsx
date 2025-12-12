@@ -19,6 +19,10 @@ function Navbar() {
           <li>
             <Link to="/application" className="navbar-link">Solicitar</Link>
           </li>
+          <li>
+            <Link to="/solicitudes">Gestión</Link>
+          </li>
+          
         </ul>
       </div>
     </nav>

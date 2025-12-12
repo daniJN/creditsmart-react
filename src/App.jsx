@@ -4,7 +4,10 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Simulator from './pages/Simulator';
 import Application from './pages/Application';
+import Solicitudes from './pages/Solicitudes';
+
 import './App.css';
+
 
 function App() {
   return (
@@ -16,6 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/simulator" element={<Simulator />} />
             <Route path="/application" element={<Application />} />
+            <Route path="/solicitudes" element={<Solicitudes />} />
           </Routes>
         </main>
         <footer className="footer">
@@ -25,5 +29,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;

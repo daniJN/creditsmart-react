@@ -1,181 +1,134 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-#  CreditSmart - Aplicación Web de Gestión de Créditos
-
-##  Información del Estudiante
-**Nombre:** Daniela Jimenez  
-**Curso:** Ingeniería Web I  
-**Actividad:**  Desarrollo de Aplicación Web Dinámica con React
-
----
-
-##  Descripción del Proyecto
-
-CreditSmart es una aplicación web interactiva desarrollada con React que permite a los usuarios explorar diferentes productos crediticios, simular créditos con filtros en tiempo real y solicitar créditos mediante formularios validados.
-
-###  Características Principales
-
-- **Página de Inicio**: Catálogo dinámico de productos crediticios con componentes reutilizables
-- **Simulador**: Sistema de búsqueda y filtrado en tiempo real con múltiples criterios
-- **Formulario de Solicitud**: Captura de datos con validaciones en tiempo real y cálculo automático de cuota mensual
-- **Diseño Responsive**: Interfaz adaptable a diferentes dispositivos
-- **Navegación Fluida**: Implementación de React Router para navegación SPA
-
----
-
-##  Tecnologías Utilizadas
-
-- **React 18** - Biblioteca principal
-- **Vite** - Herramienta de construcción y desarrollo
-- **React Router DOM** - Enrutamiento de la aplicación
-- **CSS3** - Estilos y diseño responsive
-- **JavaScript ES6+** - Lógica de la aplicación
-
----
-
-##  Instalación y Configuración
-
-### Prerrequisitos
-- Node.js (versión 16 o superior)
-- npm o yarn
 
 
-4. **Abrir en el navegador**
-```
 http://localhost:5173
-```
 
-### Comandos Disponibles
+CreditSmart - Sistema de Gestión de Créditos
 
+Sistema web para la gestión de solicitudes de crédito con integración a Firebase Firestore.
+
+## 🚀 Características
+
+- ✅ Crear solicitudes de crédito
+- 📋 Listar todas las solicitudes
+- 🗑️ Eliminar solicitudes
+- 💾 Persistencia en Firebase Firestore
+- ⚡ Interfaz responsive y moderna
+- 🔄 Actualizaciones en tiempo real
+
+## 🛠️ Tecnologías
+
+- React 18
+- Vite
+- Firebase 10.x (Firestore)
+- CSS personalizado
+
+## 📦 Instalación
+
+### 1. Clonar el repositorio
 ```bash
-npm run dev      # Ejecutar servidor de desarrollo
-npm run build    # Construir para producción
-npm run preview  # Vista previa de la build
+git clone https://github.com/tu-usuario/creditsmart.git
+cd creditsmart
 ```
 
----
+### 2. Instalar dependencias
+```bash
+npm install
+```
 
-##  Estructura del Proyecto
+### 3. Configurar Firebase
 
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/)
+2. Copia el archivo `.env.example` a `.env`
+3. Reemplaza las credenciales con las de tu proyecto Firebase
+```bash
+cp .env.example .env
+```
+
+4. Edita `.env` con tus credenciales:
+```env
+VITE_FIREBASE_API_KEY=tu_api_key
+VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=tu_project_id
+VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=1:123456789:web:xxxxx
+```
+
+### 4. Configurar reglas de Firestore
+
+En Firebase Console → Firestore Database → Reglas:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /solicitudes/{solicitudId} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+### 5. Ejecutar la aplicación
+```bash
+npm run dev
+```
+
+## 📂 Estructura del Proyecto
 ```
 creditsmart/
+├── public/
 ├── src/
+│   ├── assets/
 │   ├── components/
-│   │   ├── Navbar.jsx          # Barra de navegación
-│   │   └── CreditCard.jsx      # Tarjeta de crédito reutilizable
-│   ├── pages/
-│   │   ├── Home.jsx            # Página principal
-│   │   ├── Simulator.jsx       # Simulador con filtros
-│   │   └── Application.jsx     # Formulario de solicitud
-│   ├── data/
-│   │   └── creditsData.js      # Datos de créditos
+│   │   ├── CreditCard.jsx
+│   │   ├── Navbar.jsx
+│   │   └── Solicitudes.jsx
+│   ├── config/
+│   │   └── firebase.js
+│   ├── services/
+│   │   └── creditService.js
 │   ├── styles/
-│   │   ├── Navbar.css
-│   │   ├── CreditCard.css
-│   │   ├── Home.css
-│   │   ├── Simulator.css
 │   │   └── Application.css
-│   ├── App.jsx                 # Componente principal
-│   ├── App.css                 # Estilos globales
-│   └── main.jsx                # Punto de entrada
-├── package.json
+│   ├── App.jsx
+│   └── main.jsx
+├── .env.actividad
 ├── .gitignore
+├── package.json
 └── README.md
 ```
 
----
+## 🎯 Funcionalidades
 
-##  Funcionalidades Implementadas
+### Crear Solicitud
+- Completa el formulario con los datos del cliente
+- Monto, plazo y tipo de producto
+- Se guarda automáticamente en Firebase
 
-### 1. Inicio - Lista Dinámica de Créditos
--  Array de objetos con productos crediticios
--  Componente CreditCard.jsx reutilizable
--  Renderizado con .map()
--  Paso de datos mediante props
+### Listar Solicitudes
+- Visualiza todas las solicitudes en tarjetas
+- Información detallada de cada solicitud
+- Estado visual del crédito
 
-### 2. Simulador - Búsqueda y Filtros
--  Búsqueda por nombre en tiempo real
--  Filtro por rango de monto (select)
--  Ordenamiento por tasa de interés
--  Mensaje cuando no hay resultados
--  Botón para limpiar filtros
+### Eliminar Solicitud
+- Confirmación antes de eliminar
+- Eliminación inmediata de la base de datos
 
-### 3. Solicitar Crédito - Formulario Funcional
--  Captura de datos con useState
--  Validaciones en tiempo real:
-- Nombre (mínimo 3 caracteres)
-- Email (formato válido)
-- Teléfono (10 dígitos)
-- Montos y plazos según tipo de crédito
--  Cálculo automático de cuota mensual
--  Modal con resumen antes de enviar
--  Almacenamiento en array (memoria)
--  Mensaje de éxito
--  Limpieza automática del formulario
+## 🔒 Seguridad
 
----
+- Las credenciales de Firebase están en variables de entorno
+- `.env` está excluido del repositorio Git
+- Reglas de seguridad configuradas en Firestore
 
-##  Capturas de Pantalla
+## 🤝 Contribuir
 
-### Página de Inicio
-![Inicio](./imagenes/formulario_0.jpg)
-
-### Simulador con Filtros
-![Simulador](./imagenes/imagen_inicio.jpg)
-
-### Formulario de Solicitud
-![Formulario](./imagenes/imagen_simulador_0.jpg)
-
----
+1. Fork el proyecto
+2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Agrega nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
 
 
-### Manipulación de Arrays
-- `.map()` - Renderizado de listas
-- `.filter()` - Filtrado de datos
-- `.sort()` - Ordenamiento de resultados
-- `.find()` - Búsqueda de elementos específicos
-
-### Validaciones Implementadas
-- Validación en tiempo real de campos
-- Validación de rangos según tipo de crédito
-- Formato de email y teléfono
-- Cálculo dinámico de cuota mensual
-
-### Fórmula de Cuota Mensual
-```javascript
-payment = P * [r(1+r)^n] / [(1+r)^n - 1]
-// P = Principal (monto)
-// r = Tasa mensual (tasa anual / 12 / 100)
-// n = Número de pagos (meses)
-```
-
-
-## 📝 Commits Realizados
-
-1.  Configuración inicial de React con Vite
-2.  Archivo de datos creditsData.js creado
-3.  Componente CreditCard creado con props
-4.  Búsqueda en tiempo real y filtros implementados
-5.  Validaciones de formulario agregadas
-6.  Cálculo de cuota mensual funcionando
-7.  Estilos responsive actualizados
-8.  README.md y documentación completa
-
----
 
 

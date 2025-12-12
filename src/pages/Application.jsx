@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { creditsData } from '../data/creditsData';
 import '../styles/Application.css';
+import { createSolicitud } from '../services/creditService';
 
 function Application() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ function Application() {
   const [showSummary, setShowSummary] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [applications, setApplications] = useState([]);
+  const [guardando, setGuardando] = useState(false);
+  const [errorFirebase, setErrorFirebase] = useState(null);
 
   // Validaciones en tiempo real
   const validateField = (name, value) => {
@@ -111,23 +114,109 @@ function Application() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validar formulario
+  const newErrors = {};
+  
+  if (!formData.fullName.trim()) {
+    newErrors.fullName = 'El nombre es requerido';
+  }
+  
+  if (!formData.email.trim()) {
+    newErrors.email = 'El email es requerido';
+  } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    newErrors.email = 'Email inválido';
+  }
+  
+  if (!formData.phone.trim()) {
+    newErrors.phone = 'El teléfono es requerido';
+  }
+  
+  if (!formData.amount || formData.amount < 1000000) {
+    newErrors.amount = 'El monto mínimo es $1,000,000';
+  }
+  
+  if (!formData.term || formData.term < 6) {
+    newErrors.term = 'El plazo mínimo es 6 meses';
+  }
+  
+  if (!formData.creditType) {
+    newErrors.creditType = 'Selecciona un tipo de crédito';
+  }
+  
+  setErrors(newErrors);
+  
+  // Si hay errores, no continuar
+  if (Object.keys(newErrors).length > 0) {
+    return;
+  }
+  
+  try {
+    setGuardando(true);
+    setErrorFirebase(null);
     
-    // Validar todos los campos
-    const newErrors = {};
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
+    console.log('💾 Guardando solicitud en Firebase...');
+    
+    // Preparar datos para Firebase
+    const solicitudData = {
+      nombreCliente: formData.fullName,
+      cedula: formData.phone, // Puedes agregar un campo específico para cédula
+      email: formData.email,
+      telefono: formData.phone,
+      monto: parseFloat(formData.amount),
+      plazo: parseInt(formData.term),
+      producto: formData.creditType,
+      estado: 'Pendiente',
+      // Datos adicionales opcionales:
+      ingresos: formData.income ? parseFloat(formData.income) : null,
+      proposito: formData.purpose || null
+    };
+    
+    // Guardar en Firebase
+    const resultado = await createSolicitud(solicitudData);
+    
+    console.log('✅ Solicitud guardada exitosamente:', resultado);
+    
+    // Mostrar mensaje de éxito
+    setShowSuccess(true);
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setShowSummary(true);
-  };
+    {errorFirebase && (
+  <div className="error-message" style={{
+    backgroundColor: '#ffebee',
+    color: '#c62828',
+    padding: '15px',
+    borderRadius: '8px',
+    marginBottom: '20px',
+    border: '1px solid #ef5350'
+  }}>
+    ⚠️ {errorFirebase}
+  </div>
+)}
+    
+    // Limpiar formulario después de 2 segundos
+    setTimeout(() => {
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        amount: '',
+        term: '',
+        creditType: '',
+        income: '',
+        purpose: ''
+      });
+      setShowSuccess(false);
+    }, 3000);
+    
+  } catch (error) {
+    console.error('❌ Error al guardar en Firebase:', error);
+    setErrorFirebase('Hubo un error al guardar tu solicitud. Por favor, intenta nuevamente.');
+  } finally {
+    setGuardando(false);
+  }
+};
 
   const confirmApplication = () => {
     const credit = creditsData.find(c => c.id === parseInt(formData.creditType));
@@ -285,9 +374,17 @@ function Application() {
           )}
         </div>
 
-        <button type="submit" className="submit-button">
-          Ver Resumen
-        </button>
+        <button 
+          type="submit" 
+          className="submit-button"
+          disabled={guardando}
+          style={{
+          opacity: guardando ? 0.6 : 1,
+          cursor: guardando ? 'not-allowed' : 'pointer'
+        }}
+>
+  {guardando ? '⏳ Guardando...' : 'Enviar Solicitud'}
+</button>
       </form>
 
       {/* Modal de resumen */}
